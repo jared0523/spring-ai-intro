@@ -20,8 +20,14 @@ public class QuestionController {
         this.openAIService = openAIService;
     }
 
+    @PostMapping("/capitalWithInfo")
+    public Answer getCapitalWithInfo(@RequestBody GetCapitalRequest getCapitalRequest){
+        //return new Answer("This is the answer to your question");
+        return openAIService.getCapitalWithInfo(getCapitalRequest);
+    }
+
     @PostMapping("/capital")
-    public Answer askQuestion(@RequestBody GetCapitalRequest getCapitalRequest){
+    public Answer getCapital(@RequestBody GetCapitalRequest getCapitalRequest){
         //return new Answer("This is the answer to your question");
         return openAIService.getCapital(getCapitalRequest);
     }

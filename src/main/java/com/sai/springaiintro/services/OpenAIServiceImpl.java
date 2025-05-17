@@ -30,6 +30,40 @@ public class OpenAIServiceImpl implements OpenAIService {
     @Value("classpath:templates/get-capital-prompt.st")
     private Resource getCaptitalPrompt;
 
+    @Value("classpath:templates/get-capital-with-info.st")
+    private Resource getCaptitalPromptWithInfo;
+
+    @Override
+    public Answer getCapitalWithInfo(GetCapitalRequest getCapitalRequest) {
+
+        Instant startTime = Instant.now();  // 記錄開始時間
+
+        // 請求內容準備
+        //替換關鍵字
+        //String inputPrompt = "what is the capital of " + getCapitalRequest.stateOrCountry() + "?";
+        //使用Template檔
+        //String inputPrompt = "what is the capital of " + getCapitalRequest.stateOrCountry() + "?";
+        PromptTemplate promptTemplate = new PromptTemplate(getCaptitalPromptWithInfo);
+        Prompt prompt = promptTemplate.create(Map.of("stateOrCountry",getCapitalRequest.stateOrCountry()));
+        logger.info("OpenAI 請求開始 - Prompt: {}", prompt.getContents().toString());
+
+        //PromptTemplate promptTemplate = new PromptTemplate(inputPrompt);
+        //Prompt prompt = promptTemplate.create();
+
+        // 呼叫 OpenAI
+        ChatResponse response = chatModel.call(prompt);
+
+        // 結果與時間記錄
+        Instant endTime = Instant.now();  // 記錄結束時間
+        long durationMs = Duration.between(startTime, endTime).toMillis();
+
+        String outputContent = response.getResult().getOutput().getContent();
+        logger.info("OpenAI 回覆完成 - Response: {}", outputContent);
+        logger.info("OpenAI 請求耗時: {} ms", durationMs);
+
+        return new Answer(outputContent);
+    }
+
     @Override
     public Answer getCapital(GetCapitalRequest getCapitalRequest) {
 
@@ -59,15 +93,6 @@ public class OpenAIServiceImpl implements OpenAIService {
         logger.info("OpenAI 請求耗時: {} ms", durationMs);
 
         return new Answer(outputContent);
-        /*
-        PromptTemplate promptTemplate = new PromptTemplate(question.question());
-        Prompt prompt = promptTemplate.create();
-
-        ChatResponse response = chatModel.call(prompt);
-
-        return new Answer(response.getResult().getOutput().getContent());
-
-         */
     }
 
     @Override

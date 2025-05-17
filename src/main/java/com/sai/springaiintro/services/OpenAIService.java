@@ -6,6 +6,8 @@ import com.sai.springaiintro.model.Answer;
 
 public interface OpenAIService {
 
+    Answer getCapitalWithInfo(GetCapitalRequest getCapitalRequest);
+
     Answer getCapital(GetCapitalRequest getCapitalRequest);
 
     String getAnswer(String question);
