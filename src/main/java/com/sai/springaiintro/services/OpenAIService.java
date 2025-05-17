@@ -1,0 +1,5 @@
+package com.sai.springaiintro.services;
+
+public interface OpenAIService {
+    String getAnswer(String question);
+}
